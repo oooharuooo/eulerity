@@ -16,7 +16,7 @@ export const ImageProvider = ({ children }) => {
 	// Fetching Data
 	const fetchData = useCallback(async () => {
 		const { data } = await axios.get(
-			"http://eulerity-hackathon.appspot.com/pets"
+			"https://eulerity-hackathon.appspot.com/pets"
 		);
 		// Added unique id, select and selectAll to the data
 		setPetImg(
