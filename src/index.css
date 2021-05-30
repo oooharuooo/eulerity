@@ -3,10 +3,20 @@
 body {
 	font-family: "Roboto", sans-serif;
 }
-
+@media screen and (min-width: 768px) {
+	body {
+		padding: 0.5rem 3rem;
+	}
+}
 a {
 	text-decoration: none;
 }
+ul {
+	padding: 0;
+}
 li {
 	list-style-type: none;
+}
+button {
+	cursor: pointer;
 }
