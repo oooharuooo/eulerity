@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import uuid from "react-uuid";
 import React, { useContext, useState, useEffect } from "react";
 
 // Create ContextAPI
@@ -17,10 +17,21 @@ export const ImageProvider = ({ children }) => {
 		const { data } = await axios.get(
 			"http://eulerity-hackathon.appspot.com/pets"
 		);
-		setPetImg(data);
+
+		setPetImg(
+			data.map((modified) => {
+				return {
+					...modified,
+					id: uuid(),
+					select,
+					selectAll,
+				};
+			})
+		);
 	};
 	useEffect(() => {
 		fetchData();
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	// Filter Img base on user search term
@@ -41,9 +52,7 @@ export const ImageProvider = ({ children }) => {
 				petImg,
 				filteredImg,
 				setFilteredImg,
-				select,
 				setSelect,
-				selectAll,
 				setSelectAll,
 				searchTerm,
 				setSearchTerm,

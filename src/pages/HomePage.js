@@ -7,76 +7,93 @@ import ImgSearch from "../components/ImgSearch";
 import styled from "styled-components";
 
 const HomePage = () => {
-	const {
-		filteredImg,
-		setFilteredImg,
-		select,
-		setSelect,
-		selectAll,
-		setSelectAll,
-	} = useImageContext();
-	const [showDescription, setShowDescription] = useState({
-		compare: "",
-		show: false,
-	});
-	// const showDescriptionHandler = (uniqueID) => {
-	// 	const filterHandler = [...filteredImg].find((id) => id.url === uniqueID);
-	// 	filterHandler && setSelect(!select);
-	// };
+	const { filteredImg, setFilteredImg, setSelect, selectAll, setSelectAll } =
+		useImageContext();
+	const [showDescription, setShowDescription] = useState("");
+	const [urlsDownload, setUrlsDownload] = useState([]);
+
+	const selectChangedHandler = (id, e, url) => {
+		const selectedImg = filteredImg.map((filtered) => {
+			// Compare main id with rendered id to modify Check-Box
+			if (filtered.id === id) {
+				filtered.select = e.target.checked;
+
+				// Merge Url Link and delete it if the Check-Box is uncheck
+				if (filtered.select === true) {
+					setUrlsDownload([...urlsDownload, url]);
+				} else if (filtered.select === false) {
+					setUrlsDownload(urlsDownload.filter((d) => d !== url));
+				}
+			}
+
+			return filtered;
+		});
+		setFilteredImg(selectedImg);
+	};
+
+	const selectAllChangedHandler = (e) => {
+		const selectedAllImg = filteredImg.map((filtered) => {
+			filtered.select = e.target.checked;
+			return filtered;
+		});
+		setFilteredImg(selectedAllImg);
+	};
+	console.log(urlsDownload);
 	return (
 		<Wrapper>
 			<ImgSearch />
+			<button>
+				<input
+					name="selectAll"
+					type="checkbox"
+					checked={selectAll}
+					onChange={selectAllChangedHandler}
+				/>
+				Select All
+			</button>
 			<div className="outer-container">
-				{filteredImg.map(({ title, description, url, created }) => {
-					return (
-						<div key={url} className="innerContainer">
-							<div className="title">
-								<p>{title}</p>
-								<p>Created on: {new Date(created).toUTCString()}</p>
+				{filteredImg.map(
+					({ id, title, description, url, created, select, selectAll }) => {
+						return (
+							<div key={id} className="innerContainer">
+								<div className="title">
+									<p>{title}</p>
+									<p>Created on: {new Date(created).toUTCString()}</p>
+								</div>
+								<div
+									className="img-container"
+									onMouseEnter={() => setShowDescription(id)}
+									onMouseLeave={() => setShowDescription("")}
+								>
+									{showDescription === id && <Description desc={description} />}
+									<img src={url} alt={title} />
+								</div>
+								<input
+									name="select"
+									type="checkbox"
+									checked={select}
+									onChange={(e) => selectChangedHandler(id, e, url)}
+								/>
+								Select
+								{/* <input
+									name="selectAll"
+									type="checkbox"
+									checked={selectAll}
+									onChange={(e) => selectAllChangedHandler(id, e)}
+								/>
+								Select All */}
+								{/* {(select || selectAll) && ( */}
+								{/* <button
+									className="download-btn"
+									onClick={() => ImageDownloader(url, title)}
+								>
+									Download
+								</button> */}
+								{/* )} */}
 							</div>
-							<div
-								className="img-container"
-								onMouseEnter={() => setShowDescription({ compare: url })}
-								onMouseLeave={() => setShowDescription({ compare: "" })}
-							>
-								{showDescription.compare === url && (
-									<Description desc={description} />
-								)}
-								<img src={url} alt={title} />
-							</div>
-							<form
-								onClick={(e) => {
-									e.preventDefault();
-								}}
-							>
-								<label>
-									<input
-										name="select"
-										type="checkbox"
-										checked={select}
-										onChange={(e) => setSelect(e.target.checked)}
-									/>
-									Select
-									<input
-										name="selectAll"
-										type="checkbox"
-										checked={selectAll}
-										onChange={(e) => setSelectAll(e.target.checked)}
-									/>
-									Select All
-								</label>
-								{(select || selectAll) && (
-									<button
-										className="download-btn"
-										onClick={() => ImageDownloader(url, title)}
-									>
-										Download
-									</button>
-								)}
-							</form>
-						</div>
-					);
-				})}
+						);
+					}
+				)}
 			</div>
 		</Wrapper>
 	);
