@@ -40,6 +40,7 @@ export const ImageProvider = ({ children }) => {
 			value={{
 				petImg,
 				filteredImg,
+				setFilteredImg,
 				select,
 				setSelect,
 				selectAll,

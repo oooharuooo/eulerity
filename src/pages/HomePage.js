@@ -7,14 +7,22 @@ import ImgSearch from "../components/ImgSearch";
 import styled from "styled-components";
 
 const HomePage = () => {
-	const { filteredImg, select, setSelect, selectAll, setSelectAll } =
-		useImageContext();
-	const [showDescription, setShowDescription] = useState(false);
-	const selectHandler = (uniqueID) => {
-		const filterHandler = [...filteredImg].find((id) => id.url === uniqueID);
-		filterHandler && setSelect(!select);
-	};
-
+	const {
+		filteredImg,
+		setFilteredImg,
+		select,
+		setSelect,
+		selectAll,
+		setSelectAll,
+	} = useImageContext();
+	const [showDescription, setShowDescription] = useState({
+		compare: "",
+		show: false,
+	});
+	// const showDescriptionHandler = (uniqueID) => {
+	// 	const filterHandler = [...filteredImg].find((id) => id.url === uniqueID);
+	// 	filterHandler && setSelect(!select);
+	// };
 	return (
 		<Wrapper>
 			<ImgSearch />
@@ -28,13 +36,19 @@ const HomePage = () => {
 							</div>
 							<div
 								className="img-container"
-								onMouseEnter={() => selectHandler(url)}
-								onMouseLeave={() => setShowDescription(false)}
+								onMouseEnter={() => setShowDescription({ compare: url })}
+								onMouseLeave={() => setShowDescription({ compare: "" })}
 							>
-								{showDescription && <Description desc={description} />}
+								{showDescription.compare === url && (
+									<Description desc={description} />
+								)}
 								<img src={url} alt={title} />
 							</div>
-							<form>
+							<form
+								onClick={(e) => {
+									e.preventDefault();
+								}}
+							>
 								<label>
 									<input
 										name="select"
@@ -101,7 +115,7 @@ const Wrapper = styled.main`
 
 			&:first-child {
 				color: #8e7a85;
-				background-color: ghostwhite;
+				background-color: #f8f8ff;
 
 				font-family: "Mate SC", serif;
 				font-weight: bold;
@@ -114,14 +128,14 @@ const Wrapper = styled.main`
 		position: relative;
 		opacity: 1;
 		transition: 0.3s ease-in-out;
-		&:hover {
-			opacity: 0.6;
-		}
+
 		img {
 			width: 100%;
+			&:hover {
+				opacity: 0.1;
+			}
 			@media screen and (min-width: 768px) {
 				height: 300px;
-				width: 100%;
 				object-fit: contain;
 			}
 		}
