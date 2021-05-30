@@ -10,6 +10,7 @@ export const ImageProvider = ({ children }) => {
 	const [petImg, setPetImg] = useState([]);
 	const [filteredImg, setFilteredImg] = useState([]);
 
+	const [loading, setLoading] = useState(true);
 	const [select, setSelect] = useState(false);
 	const [selectAll, setSelectAll] = useState(false);
 
@@ -18,6 +19,8 @@ export const ImageProvider = ({ children }) => {
 		const { data } = await axios.get(
 			"https://eulerity-hackathon.appspot.com/pets"
 		);
+		// Set Loading to false
+		setLoading(false);
 		// Added unique id, select and selectAll to the data
 		setPetImg(
 			data.map((modified) => {
@@ -50,6 +53,7 @@ export const ImageProvider = ({ children }) => {
 	return (
 		<ImageContext.Provider
 			value={{
+				loading,
 				petImg,
 				filteredImg,
 				setFilteredImg,

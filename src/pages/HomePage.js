@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import LoadingPage from "../pages/LoadingPage";
 import { useImageContext } from "../context/ImageContext";
 import ImgDownloader from "../utils/ImgDownloader";
 import Description from "../components/Description";
@@ -7,7 +8,7 @@ import ImgSearch from "../components/ImgSearch";
 import styled from "styled-components";
 
 const HomePage = () => {
-	const { filteredImg, setFilteredImg, selectAll } = useImageContext();
+	const { loading, filteredImg, setFilteredImg, selectAll } = useImageContext();
 	const [showDescription, setShowDescription] = useState("");
 	const [urlsDownload, setUrlsDownload] = useState([]);
 
@@ -49,7 +50,9 @@ const HomePage = () => {
 		setFilteredImg(selectedAllImg);
 	};
 
-	return (
+	return loading ? (
+		<LoadingPage />
+	) : (
 		<Wrapper>
 			<ImgSearch />
 			<div className="button-container">
