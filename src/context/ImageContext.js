@@ -6,7 +6,9 @@ import React, { useContext, useState, useEffect } from "react";
 const ImageContext = React.createContext();
 
 export const ImageProvider = ({ children }) => {
+	const [searchTerm, setSearchTerm] = useState("");
 	const [petImg, setPetImg] = useState([]);
+	const [filteredImg, setFilteredImg] = useState([]);
 	const [select, setSelect] = useState(false);
 	const [selectAll, setSelectAll] = useState(false);
 
@@ -21,9 +23,30 @@ export const ImageProvider = ({ children }) => {
 		fetchData();
 	}, []);
 
+	// Filter Img base on user search term
+	useEffect(() => {
+		setFilteredImg(
+			petImg.filter(({ title, description }) => {
+				return (
+					title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+					description.toLowerCase().includes(searchTerm.toLowerCase())
+				);
+			})
+		);
+	}, [searchTerm, petImg]);
+
 	return (
 		<ImageContext.Provider
-			value={{ petImg, select, setSelect, selectAll, setSelectAll }}
+			value={{
+				petImg,
+				filteredImg,
+				select,
+				setSelect,
+				selectAll,
+				setSelectAll,
+				searchTerm,
+				setSearchTerm,
+			}}
 		>
 			{children}
 		</ImageContext.Provider>
