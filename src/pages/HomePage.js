@@ -11,7 +11,7 @@ const HomePage = () => {
 	const [showDescription, setShowDescription] = useState("");
 	const [urlsDownload, setUrlsDownload] = useState([]);
 
-	// Select Single Img
+	// Select Single or Multiple Img Handler
 	const selectChangedHandler = (id, e, url, title) => {
 		const selectedImg = filteredImg.map((filtered) => {
 			// Compare main id with rendered id to modify Check-Box
@@ -33,23 +33,21 @@ const HomePage = () => {
 		setFilteredImg(selectedImg);
 	};
 
-	// Select All Img
-	const selectAllChangedHandler = (e, id) => {
+	// Select All Imgs Handler
+	const selectAllChangedHandler = (e) => {
 		const selectedAllImg = filteredImg.map((filtered) => {
 			filtered.select = e.target.checked;
 			filtered.selectAll = e.target.checked;
-
-			if (filtered.select) {
-				setUrlsDownload([...urlsDownload]);
-				console.log(filtered.title, filtered.url);
-				console.log(urlsDownload);
+			// Merge the original data
+			if (filtered.selectAll) {
+				setUrlsDownload(filteredImg);
+			} else if (!filtered.selectAll) {
+				setUrlsDownload([]);
 			}
-
 			return filtered;
 		});
 		setFilteredImg(selectedAllImg);
 	};
-	console.log(urlsDownload);
 
 	return (
 		<Wrapper>
@@ -127,7 +125,8 @@ const Wrapper = styled.main`
 			height: 20px;
 		}
 		:hover {
-			box-shadow: inset 0 0 0 50px #d80286;
+			color: white;
+			box-shadow: inset 0 0 0 50px #4748ab;
 		}
 	}
 	.outer-container {
